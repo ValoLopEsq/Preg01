@@ -140,4 +140,70 @@ public class AlumnowebJpaController implements Serializable {
         }
     }
     
+    public void actualizar(Alumnoweb persona) throws NonexistentEntityException, Exception {
+        EntityManager em = null;
+        try {
+            em = getEntityManager();
+            em.getTransaction().begin();
+
+            // Verifica si la persona ya existe en la base de datos
+            Alumnoweb personaExistente = em.find(Alumnoweb.class, persona.getCodiEstdWeb());
+            if (personaExistente == null) {
+                throw new NonexistentEntityException("La persona con ID " + persona.getCodiEstdWeb()+ " no existe.");
+            }
+
+            // Actualiza la persona existente con los nuevos valores
+            personaExistente.setNdniEstdWeb(persona.getNdniEstdWeb());
+            personaExistente.setAppaEstdWeb(persona.getAppaEstdWeb());
+            personaExistente.setApmaEstdWeb(persona.getApmaEstdWeb());
+            personaExistente.setNombEstdWeb(persona.getNombEstdWeb());           
+            personaExistente.setFechNaciEstdWeb(persona.getFechNaciEstdWeb());
+            personaExistente.setLogiEstd(persona.getLogiEstd());
+            // Realiza el merge para guardar los cambios
+            em.merge(personaExistente);
+            em.getTransaction().commit();
+        } catch (Exception ex) {
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+            }
+            throw ex;
+        } finally {
+            if (em != null) {
+                em.close();
+            }
+        }
+    }
+    
+    public Alumnoweb validar(Alumnoweb u){
+        EntityManager em = getEntityManager();
+        try {
+            Query q = em.createNamedQuery("Usuario.validar");
+            q.setParameter("ndniEstdWeb", u.getNdniEstdWeb());
+            q.setParameter("passUsua", u.getPassEstd());
+            return (Alumnoweb) q.getSingleResult();
+        } catch (Exception ex) {
+            return null;
+        } finally {
+            em.close();
+        }
+    }
+
+    public String cambiarClave(Alumnoweb u, String nuevaClave) {
+        EntityManager em = getEntityManager();
+        try {
+            AlumnowebJpaController usuDAO = new AlumnowebJpaController();
+            Alumnoweb usuario = usuDAO.findAlumnoweb(u.getCodiEstdWeb());
+            if (usuario.getPassEstd().equals(u.getPassEstd())) {
+                usuario.setPassEstd(nuevaClave);
+                usuDAO.edit(usuario);
+                return "Clave cambiada";
+            } else {
+                return "Clave actual no valida";
+            }
+        } catch (Exception ex) {
+            return null;
+        } finally {
+            em.close();
+        }
+    }
 }

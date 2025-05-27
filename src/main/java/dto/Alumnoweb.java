@@ -100,6 +100,24 @@ public class Alumnoweb implements Serializable {
         this.logiEstd = logiEstd;
         this.passEstd = passEstd;
     }
+    
+    public Alumnoweb(Integer codiEstdWeb, String ndniEstdWeb, String appaEstdWeb, String apmaEstdWeb, String nombEstdWeb, Date fechNaciEstdWeb, String logiEstd) {
+        this.codiEstdWeb = codiEstdWeb;
+        this.ndniEstdWeb = ndniEstdWeb;
+        this.appaEstdWeb = appaEstdWeb;
+        this.apmaEstdWeb = apmaEstdWeb;
+        this.nombEstdWeb = nombEstdWeb;
+        this.fechNaciEstdWeb = fechNaciEstdWeb;
+        this.logiEstd = logiEstd;
+        this.passEstd = passEstd;
+    }
+    
+    public Alumnoweb(Integer codiEstdWeb, String ndniEstdWeb, String passEstd)
+    {
+        this.codiEstdWeb = codiEstdWeb;
+        this.ndniEstdWeb = ndniEstdWeb;
+        this.passEstd = passEstd;
+    }
 
     public Integer getCodiEstdWeb() {
         return codiEstdWeb;
