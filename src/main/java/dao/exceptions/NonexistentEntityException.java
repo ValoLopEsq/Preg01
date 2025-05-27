@@ -8,5 +8,6 @@ public class NonexistentEntityException extends Exception {
         super(message);
         
         
+        
     }
 }
