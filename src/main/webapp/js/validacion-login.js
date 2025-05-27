@@ -4,8 +4,13 @@ $(document).ready(function () {
         loginUser();
     });
 
+    
+
     function loginUser() {
+        let passCifrado = cifrar($('#exampleInputPassword').val().trim(),clave);
+        
         const puser = $('#exampleInputEmail').val().trim();
+        //const ppass = passCifrado;
         const ppass = $('#exampleInputPassword').val().trim();
 
         if (!validateFields(puser, ppass))
@@ -14,15 +19,14 @@ $(document).ready(function () {
         $.ajax({
             url: 'validarusuario',
             method: 'POST',
-            dataType: 'json',
-            data: { puser, ppass },
+            dataType: 'json', // Indicamos que la respuesta es JSON
+            data: {puser, ppass},
             success: function (response) {
-                if (response.resultado === "ok") {
-                    sessionStorage.setItem('puser', puser);
-                    // ⚠️ No guardes la contraseña en sessionStorage
+                if (response.valid) {
+                    storeUserSession(puser, ppass);
                     window.location.href = 'principal.html';
                 } else {
-                    showError(response.error || "Usuario o contraseña incorrectos.");
+                    showError(response.error || "Error en la autenticación.");
                 }
             },
             error: function () {
@@ -46,5 +50,10 @@ $(document).ready(function () {
 
     function hideError() {
         $('#errorMessage').hide();
+    }
+
+    function storeUserSession(user, pass) {
+        sessionStorage.setItem('puser', user);
+        sessionStorage.setItem('ppass', pass);
     }
 });
