@@ -6,5 +6,7 @@ public class NonexistentEntityException extends Exception {
     }
     public NonexistentEntityException(String message) {
         super(message);
+        
+        
     }
 }
